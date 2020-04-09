@@ -1,0 +1,30 @@
+{
+  "name": "abigail-and-nathaniel-rsvp-server",
+  "version": "1.0.0",
+  "description": "Server for managing RSVPs for the Liberty-Richbourg wedding.",
+  "main": "src/server.ts",
+  "scripts": {
+    "start": "node dist/server.js",
+    "build": "tsc",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+  },
+  "author": "Nathaniel J. Liberty <nathaniel.liberty@gmail.com>",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.7"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.6",
+    "@types/express": "^4.17.4",
+    "@types/mongoose": "^5.7.8",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "tslint": "^6.1.1",
+    "typescript": "^3.8.3"
+  },
+  "engines": {
+    "node": "12.13.x"
+  }
+}
