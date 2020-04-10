@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
 export type GuestDocument = mongoose.Document & {
-  entree: string;
-  isAttendingRehearsalDinner: boolean;
-  isAttendingWedding: boolean;
+  entree?: string;
+  isAttendingRehearsalDinner?: boolean;
+  isAttendingWedding?: boolean;
   isInvitedToRehearsalDinner: boolean;
   name: string;
   rsvpCode: string;

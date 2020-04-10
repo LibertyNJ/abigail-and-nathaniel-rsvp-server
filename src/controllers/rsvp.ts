@@ -1,54 +1,72 @@
 import { Request, Response } from 'express';
 
-import Guest from '../models/Guest';
+import Guest, { GuestDocument } from '../models/Guest';
 
 const get = async (req: Request, res: Response) => {
-  const rsvpCode = req.body.code;
-  const guests = await Guest.find({ rsvpCode });
+  const rsvpCode = req.params.code;
 
-  if (guests.length > 0) {
-    const result = guests.map((guest) => ({
-      id: guest.id,
-      entree: guest.entree,
-      isAttendingRehearsalDinner: guest.isAttendingRehearsalDinner,
-      isAttendingWedding: guest.isAttendingWedding,
-      isInvitedToRehearsalDinner: guest.isInvitedToRehearsalDinner,
-      name: guest.name,
-      title: guest.title,
-    }));
+  if (/^[A-Z0-9]{6}$/.test(rsvpCode)) {
+    try {
+      const guests = await Guest.find({ rsvpCode });
 
-    res.status(200).send(result);
+      if (guests.length > 0) {
+        const result = guests.map((guest) => ({
+          id: guest.id,
+          entree: guest.entree,
+          isAttendingRehearsalDinner: guest.isAttendingRehearsalDinner,
+          isAttendingWedding: guest.isAttendingWedding,
+          isInvitedToRehearsalDinner: guest.isInvitedToRehearsalDinner,
+          name: guest.name,
+          title: guest.title,
+        }));
+
+        res.status(200).send(result);
+      } else {
+        res
+          .status(404)
+          .send(
+            `No guests found for RSVP code "${rsvpCode}". Please check your RSVP code and try again.`
+          );
+      }
+    } catch (error) {
+      res
+        .status(500)
+        .send('The server encountered an unexpected error. Please try again.');
+    }
   } else {
-    res.status(404).send(`No guests found for RSVP code "${rsvpCode}".`);
+    res.status(400).send('Received an invalid RSVP code.');
   }
 };
 
-type GuestDatum = {
-  id: string;
-  entree: string;
-  isAttendingRehearsalDinner?: boolean;
-  isAttendingWedding: boolean;
-  name: string;
-  title: string;
-};
-
 const post = (req: Request, res: Response) => {
-  const guestData: GuestDatum[] = req.body;
+  const guests: GuestDocument[] = req.body;
 
-  guestData.forEach(async (guestDatum) => {
-    await Guest.update(
-      { _id: guestDatum.id },
-      {
-        entree: guestDatum.entree,
-        isAttendingRehearsalDinner: guestDatum.isAttendingRehearsalDinner,
-        isAttendingWedding: guestDatum.isAttendingWedding,
-        name: guestDatum.name,
-        title: guestDatum.title,
-      }
-    );
-  });
+  if (Array.isArray(guests) && guests.length > 0) {
+    try {
+      guests.forEach(async (guest) => {
+        await Guest.updateOne(
+          { _id: guest.id },
+          {
+            entree: guest.entree,
+            isAttendingRehearsalDinner: guest.isAttendingRehearsalDinner,
+            isAttendingWedding: guest.isAttendingWedding,
+            name: guest.name,
+            title: guest.title,
+          }
+        );
+      });
 
-  res.status(200).send('Guest data updated.');
+      const pluralityAppendant = guests.length > 1 ? 's' : '';
+
+      res
+        .status(200)
+        .send(`Guest${pluralityAppendant} updated. Thank you for your RSVP!`);
+    } catch (error) {
+      res.status(500).send('Something went wrong. Please try again.');
+    }
+  } else {
+    res.status(400).send('Received invalid guest data.');
+  }
 };
 
 export default {

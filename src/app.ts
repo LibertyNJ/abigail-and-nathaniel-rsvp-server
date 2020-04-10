@@ -12,11 +12,10 @@ export default () => {
 
 function loadMiddleware(app: Express) {
   app.use(cors());
-  app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 }
 
 function loadRoutes(app: Express) {
-  app.get('/rsvp', rsvpController.get);
+  app.get('/rsvp/:code', rsvpController.get);
   app.post('/rsvp', rsvpController.post);
 }
