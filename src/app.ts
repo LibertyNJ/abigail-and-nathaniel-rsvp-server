@@ -1,21 +1,13 @@
-import cors from 'cors';
-import express, { Express } from 'express';
+import express from 'express';
 
-import rsvpController from './controllers/rsvp';
+import middleware, { errorHandler, notFoundHandler } from './middleware';
+import routes from './routes';
 
 export default () => {
   const app = express();
-  loadMiddleware(app);
-  loadRoutes(app);
+  app.use(middleware);
+  app.use(routes);
+  app.use(notFoundHandler);
+  app.use(errorHandler);
   return app;
 };
-
-function loadMiddleware(app: Express) {
-  app.use(cors());
-  app.use(express.json());
-}
-
-function loadRoutes(app: Express) {
-  app.get('/rsvp/:code', rsvpController.get);
-  app.post('/rsvp', rsvpController.post);
-}
