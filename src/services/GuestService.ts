@@ -3,6 +3,7 @@ import { Model, MongooseFilterQuery } from 'mongoose';
 import Guest, { GuestDocument } from '../models/Guest';
 
 export type GuestData = {
+  accommodations?: string;
   entree?: string;
   isAttendingRehearsalDinner?: boolean;
   isAttendingWedding?: boolean;

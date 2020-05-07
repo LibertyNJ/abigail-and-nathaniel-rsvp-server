@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 export interface GuestDocument extends mongoose.Document {
+  accommodations?: string;
   entree?: string;
   isAttendingRehearsalDinner?: boolean;
   isAttendingWedding?: boolean;
@@ -12,6 +13,10 @@ export interface GuestDocument extends mongoose.Document {
 
 const GuestSchema = new mongoose.Schema(
   {
+    accommodations: {
+      trim: true,
+      type: String,
+    },
     entree: {
       enum: ['beef', 'chicken', 'vegan'],
       type: String,

@@ -4,6 +4,7 @@ import guestService, { GuestService } from '../services/GuestService';
 
 export type Guest = {
   _id: string;
+  accommodations?: string;
   entree?: string;
   isAttendingRehearsalDinner?: boolean;
   isAttendingWedding?: boolean;
@@ -39,6 +40,7 @@ export class GuestController {
       guests.forEach(async (guest: Guest) => {
         const {
           _id,
+          accommodations,
           entree,
           isAttendingRehearsalDinner,
           isAttendingWedding,
@@ -47,6 +49,7 @@ export class GuestController {
         } = guest;
 
         const data = {
+          accommodations,
           entree,
           isAttendingRehearsalDinner,
           isAttendingWedding,
